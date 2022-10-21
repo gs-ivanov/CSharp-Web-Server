@@ -1,29 +1,33 @@
 ﻿namespace MyWebServer
 {
-    using System.Threading.Tasks;
-    using MyWebServer.Server;
-    using MyWebServer.Server.Responses;
-
+    using System;
+    delegate int MyDelegate(int x,int y);
     public class Startup
     {
-        public static async Task Main()
-            => await new HttpServer(routes => routes
-                .MapGet("/", new TextResponse("Hello from Ivo!"))
-                .MapGet("/Cats", request =>
-                {
-                    const string nameKey = "Name";
+        public static void Main()
+        {
+            // Delegate
+            MyDelegate del = new MyDelegate(AddNumbers);
+            Console.WriteLine("Delegate: " + del(9,12));
 
-                    var query = request.Query;
+            //Func
+            Func<int, int, int> Addition = AddNumbers;
 
-                    var catName = query.ContainsKey(nameKey)
-                        ? query[nameKey]
-                        : "the cats";
+            Console.WriteLine("Func: " + Addition(10, 20));
 
-                    var result = $"<h1>Hello from {catName}!</h1>";
+            //Func with anonymous method
+            Func<int, int, int> AdditionAnonim = delegate (int a, int b) { return (a + b); };
 
-                    return new HtmlResponse(result);
-                })
-                .MapGet("/Dogs", new HtmlResponse("<h1>Hello from the dogs!</h1>")))
-            .Start();
+            Console.WriteLine("Func AdditionAnonim: " + AdditionAnonim(10, 20));
+            
+            //Func with Lambda 
+            //Func<int, int, int> calc =(a,b)=>{ return (a + b); };
+            Func<int, int, int> calc =(a,b)=>(a *b-20000);
+
+            Console.WriteLine("Func AdditionAnonim: " + calc(100, 200));
+
+        }
+
+        static int AddNumbers(int a, int b) => a + b;
     }
 }
