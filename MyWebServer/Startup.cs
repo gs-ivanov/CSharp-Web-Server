@@ -1,108 +1,53 @@
 ﻿namespace MyWebServer
 {
-    using MyWebServer.Server;
-    using MyWebServer.Server.Responses;
     using System;
-    using System.Linq;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    delegate void MyDelegate(string s);
+    delegate string StrDelegate(int n);
+    class MyClass
+    {
+        public MyDelegate apply;
+        public MyClass(MyDelegate md) => apply = md;
+    }
+
+    class Alpha
+    {
+        private string name;
+        public void SetName(string s) => name = s;
+        public override string ToString()
+            => name;
+    }
     public class Startup
     {
-        static void Map(string s)
-        {
-            Console.WriteLine(s);
-        }
-
-        static void Map2(Action<string> action)
-        {
-            Console.WriteLine(action());
-        }
         public static async Task Main()
         {
-            Action<string> action = new Action<string>(Map);
+            Alpha A = new Alpha();
+            Action<MyDelegate> action=SomeMethod;
 
-            action("KKKKKKKk");
+            action = A.SetName;
 
-            // Action<string> a =new Action<string>Map2;
-            Map2();
+            //MyClass obj = new MyClass(A.SetName);
 
-            List<int> integers = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            //obj.apply("OOO");
 
-            foreach (int num in integers.Where(n => n % 2 == 0).ToList())
-            {
-                //Console.WriteLine(num);
-            }
-
-            int[] integersB = new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-
-            foreach (int num in integers.Where(n =>
-                {
-                    if (n % 2 == 0)
-                        return true;
-                    return false;
-                }
-            ))
-                Console.WriteLine(num);
-
-        
-
-            //() => Console.WriteLine(9999);
-
-            //Action<string> action = new Action<string>(Map);
-            return;
-            var objG = new GttpServer(r => r
-              //.MapGet("/", new TextResponse("Hello from Ivo!"))
-              .MapGet("/Cats", request =>
-             {
-                 const string nameKey = "Name";
-
-                 var query = request.Query;
-
-                 var catName = query.ContainsKey(nameKey)
-                     ? query[nameKey]
-                     : "the cats";
-
-                 var result = $"<h1>Hello from {catName}!</h1>";
-
-                 return new HtmlResponse(result);
-             })
-            );
-            var obj = new HttpServer(r => r
-            //.MapGet("/", new TextResponse("Hello from Ivo!"))
-            .MapGet("/Cats", request =>
-                {
-                    const string nameKey = "Name";
-
-                    var query = request.Query;
-
-                    var catName = query.ContainsKey(nameKey)
-                        ? query[nameKey]
-                        : "the cats";
-
-                    var result = $"<h1>Hello from {catName}!</h1>";
-
-                    return new HtmlResponse(result);
-                })
-            );
+            //Console.WriteLine(A);
         }
-        //=> await new HttpServer(routes => routes
-        //    .MapGet("/", new TextResponse("Hello from Ivo!"))
-        //    .MapGet("/Cats", request =>
-        //    {
-        //        const string nameKey = "Name";
 
-        //        var query = request.Query;
+        private static string SomeStrMethod(int n)
+        {
+            //StrDelegate strDelegate = SomeStrMethod;
 
-        //        var catName = query.ContainsKey(nameKey)
-        //            ? query[nameKey]
-        //            : "the cats";
+            //Console.WriteLine(strDelegate(9999));
+            return n.ToString();
+        }
 
-        //        var result = $"<h1>Hello from {catName}!</h1>";
+        static void SomeMethod(string s)
+        {
+            //MyDelegate myDelegate = SomeMethod;
 
-        //        return new HtmlResponse(result);
-        //    })
-        //    .MapGet("/Dogs", new HtmlResponse("<h1>Hello from the dogs!</h1>")))
-        //.Start();
+            //myDelegate("JJJJJJJJJ");
+            Console.WriteLine(s);
+        }
     }
 }
