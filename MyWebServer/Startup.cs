@@ -25,5 +25,7 @@
                 })
                 .MapGet("/Dogs", new HtmlResponse("<h1>Hello from the dogs!</h1>")))
             .Start();
+
+        // Test 12.12.22
     }
 }
